@@ -1,26 +1,78 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Box : MonoBehaviour
 {
     public bool IsDestroyed = false;
     private bool IsFirstTime = true;
+
+    public CinemachineTargetGroup targetGroup;
     [SerializeField] ParticleSystem DestroyParticle;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] Transform PositionIndicator;
+
 
     // Update is called once per frame
     void Update()
     {
+        PositionIndicator.transform.position = new Vector3(0, transform.position.y, 0);
+        if (transform.position.y <= -6) IsDestroyed = true;
+
         if (IsDestroyed && IsFirstTime)
         {
+            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            RemoveFromTargetGroup();
             DestroyParticle.Play();
             IsFirstTime = false;
             GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
+            if (GetComponentInChildren<Collider2D>()) GetComponentInChildren<Collider2D>().enabled = false;
+        }
+    }
+
+    private void OnEnable()
+    {
+        targetGroup = FindObjectOfType<CinemachineTargetGroup>();
+        // 当GameObject启用时，将其添加到Cinemachine Target Group中
+        FindObjectOfType<ReachTarget>().boxes.Add(this);
+        AddToTargetGroup();
+    }
+
+
+    void AddToTargetGroup()
+    {
+        if (targetGroup != null)
+        {
+            // 检查这个transform是否已经在targetGroup中
+            bool alreadyInGroup = false;
+            foreach (var member in targetGroup.m_Targets)
+            {
+                if (member.target == PositionIndicator)
+                {
+                    alreadyInGroup = true;
+                    break;
+                }
+            }
+
+            // 如果不在group中，则添加
+            if (!alreadyInGroup)
+            {
+                targetGroup.AddMember(PositionIndicator, 1, 1); // 这里的权重和半径可以根据需要调整
+            }
+        }
+        else
+        {
+            Debug.LogError("CinemachineTargetGroup is not assigned.");
+        }
+    }
+
+    void RemoveFromTargetGroup()
+    {
+        if (targetGroup != null)
+        {
+            FindObjectOfType<ReachTarget>().boxes.Remove(this);
+            targetGroup.RemoveMember(PositionIndicator);
+            Debug.Log("removed");
         }
     }
 }

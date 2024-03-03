@@ -36,7 +36,6 @@ public class ObjectPool : MonoBehaviour
 
         // 从池中取出一个对象并返回
         var obj = objects.Dequeue();
-        Debug.Log(obj.name);
         obj.SetActive(true);
         return obj;
     }
