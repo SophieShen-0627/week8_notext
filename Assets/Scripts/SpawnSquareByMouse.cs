@@ -7,7 +7,11 @@ public class SpawnSquareByMouse : MonoBehaviour
 {
     public bool CanDoSpawn = false;
 
+    [SerializeField] AudioSource audiosource1;
+    [SerializeField] AudioSource audiosource2;
+
     [SerializeField] CinemachineTargetGroup group;
+    [SerializeField] AudioClip ClickSound;
 
     [SerializeField] GameObject BoxPrefab;
     [SerializeField] float MouseCameraScaleParameter = 1;
@@ -18,13 +22,21 @@ public class SpawnSquareByMouse : MonoBehaviour
     private Color CurrentColor;
     private float h_hsb;
 
+    private Vector2 lastPosition = Vector2.zero;
+
     // Update is called once per frame
     void Update()
     {
+        if (Vector2.Distance(Camera.main.ScreenToWorldPoint(Input.mousePosition), lastPosition) <= 0.05f)
+        {
+            audiosource2.Pause();
+        }
+        else audiosource2.UnPause();
 
+        lastPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (CanDoSpawn)
-        {
+        {            
             if (Input.GetMouseButtonDown(0))
             {
                 MouseInitialPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -37,6 +49,8 @@ public class SpawnSquareByMouse : MonoBehaviour
 
                 //GetComponent<LineRenderer>().SetPosition(0, MouseInitialPos);
 
+                audiosource1.pitch = Random.Range(0.8f, 1.2f);
+                audiosource1.PlayOneShot(ClickSound);
 
                 SpawnMod = true;
             }

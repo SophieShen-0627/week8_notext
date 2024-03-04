@@ -10,11 +10,41 @@ public class tutorial : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        transform.localScale = new Vector3(.15f, .15f, 1);
     }
 
     // Update is called once per frame
     void Update()
+    {
+        NoTutorial();
+        //HasTutorial();
+    }
+
+
+    private void NoTutorial()
+    {
+        FindObjectOfType<SpawnSquareByMouse>().CanDoSpawn = true;
+        if (!indicator.isStopped) indicator.Stop();
+        if (particle2.isStopped) particle2.Play();
+
+        Vector2 MousePostion = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        float Dis = Vector2.Distance(MousePostion, transform.position);
+        transform.position = MousePostion;
+
+
+        if (Input.GetMouseButtonDown(0) && Dis <= 0.15f)
+        {
+            transform.localScale = new Vector3(.08f, .08f, 1);
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            transform.localScale = new Vector3(.15f, .15f, 1);
+        }
+    }
+
+
+    private void HasTutorial()
     {
         if (!HasClick)
         {
@@ -57,6 +87,7 @@ public class tutorial : MonoBehaviour
             {
                 transform.localScale = new Vector3(.1f, .1f, 1);
             }
+
             if (Input.GetMouseButtonUp(0))
             {
                 transform.localScale = new Vector3(.25f, .25f, 1);

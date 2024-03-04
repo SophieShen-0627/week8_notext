@@ -11,12 +11,14 @@ public class Box : MonoBehaviour
     public CinemachineTargetGroup targetGroup;
     [SerializeField] ParticleSystem DestroyParticle;
     [SerializeField] Transform PositionIndicator;
-
+    [SerializeField] AudioClip Explosion;
 
     // Update is called once per frame
     void Update()
     {
-        PositionIndicator.transform.position = new Vector3(0, transform.position.y, 0);
+        if (transform.position.y > 0) PositionIndicator.transform.position = new Vector3(0, transform.position.y, 0);
+        else PositionIndicator.transform.position = Vector3.zero;
+
         if (transform.position.y <= -6) IsDestroyed = true;
 
         if (IsDestroyed && IsFirstTime)
@@ -70,9 +72,12 @@ public class Box : MonoBehaviour
     {
         if (targetGroup != null)
         {
+            GetComponent<AudioSource>().pitch = Random.Range(0.8f, 1.2f);
+            GetComponent<AudioSource>().PlayOneShot(Explosion);
             FindObjectOfType<ReachTarget>().boxes.Remove(this);
             targetGroup.RemoveMember(PositionIndicator);
             Debug.Log("removed");
         }
     }
+
 }

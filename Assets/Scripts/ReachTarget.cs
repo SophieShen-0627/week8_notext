@@ -20,6 +20,7 @@ public class ReachTarget : MonoBehaviour
 {
     public List<Box> boxes = new List<Box>();
 
+    [SerializeField] AudioClip Win;
     [SerializeField] float CurrentTargetheight = 10;
     [SerializeField] float CurrentInterval = 10;
     [SerializeField] List<GoalLineRenderer> Lines = new List<GoalLineRenderer>();
@@ -27,6 +28,10 @@ public class ReachTarget : MonoBehaviour
     [SerializeField] List<Material> LineMaterial = new List<Material>();
     [SerializeField] LineRenderer GoalLines;
 
+    private void OnEnable()
+    {
+        AddTargetLine(CurrentTargetheight);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -58,8 +63,9 @@ public class ReachTarget : MonoBehaviour
                         if (box.GetComponent<Rigidbody2D>().velocity.magnitude <= 0.1f && box.transform.position.y >= Lines[i].height && !Lines[i].hasReached)
                         {
                             Lines[i] = UpdateHasReached(Lines[i], true);
-                            CelebrateParticle.transform.position = box.transform.position;
+                            CelebrateParticle.transform.position = new Vector3 (box.transform.position.x, Lines[i].height, 0);
                             CelebrateParticle.Play();
+                            GetComponent<AudioSource>().PlayOneShot(Win);
 
                             break;
                         }
