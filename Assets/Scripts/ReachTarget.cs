@@ -30,7 +30,7 @@ public class ReachTarget : MonoBehaviour
 
     private void OnEnable()
     {
-        AddTargetLine(CurrentTargetheight);
+        //AddTargetLine(CurrentTargetheight);
     }
     // Update is called once per frame
     void Update()
@@ -42,7 +42,7 @@ public class ReachTarget : MonoBehaviour
 
         if (leftTop.y >= CurrentTargetheight)
         {
-            AddTargetLine(leftTop.y);
+            AddTargetLine(CurrentTargetheight);
             CurrentTargetheight += CurrentInterval;
             CurrentInterval += CurrentTargetheight;
         }

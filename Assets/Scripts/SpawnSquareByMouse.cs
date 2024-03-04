@@ -79,7 +79,7 @@ public class SpawnSquareByMouse : MonoBehaviour
         if (BoxScale >= 3)
         {
             float s = 0.43f - (BoxScale - 3) * 0.1f;
-            float b = 1 - (BoxScale - 3) * 0.1f;
+            float b = Mathf.Clamp( 1 - (BoxScale - 3) * 0.1f , 0.4f, 1);
 
             CurrentColor = MyUtility.HSBToRGB(h_hsb, s, b);
         }
